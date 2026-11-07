@@ -1,5 +1,5 @@
 // data default sementara untuk servis HP
-let serviceOrders = [
+const serviceOrders = [
   {
     id: "SRV-001",
     namaCustomer: "Budi",

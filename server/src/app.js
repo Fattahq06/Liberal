@@ -6,13 +6,22 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Rute default
 app.get("/", (req, res) => {
-  res.send("Server Backend Express Berjalan dengan Baik!");
+  res.json({ message: "Server Backend Express Berjalan dengan Baik!" });
 });
 
 // Daftarkan rute API dengan awalan /api
 app.use("/api", serviceRoutes);
+
+// [isan] Daftar Route Untuk Service
+app.use("/api/services", serviceRoutes);
+
+// [isan] ini handler untuk error 404 yang dicontohkan pak dosen
+app.use((req, res) => {
+  res.status(404).json({ error: "Endpoint tidak ditemukan" });
+});
 
 module.exports = app;
