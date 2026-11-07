@@ -1,11 +1,11 @@
 const serviceModel = require("../models/serviceModel");
 
-// 1. Tambah data service baru (Create)
+// Tambah data service baru (Create)
 const createService = async (req, res) => {
   try {
     const serviceData = req.body;
 
-    // Validasi input wajib
+    // [isan] validasi agar client tidak request - mengirimkan data yang tidak lengkap, seminimalnya mengirim data yang bersifat required
     if (
       !serviceData.namaCustomer ||
       !serviceData.seriHandphone ||
@@ -19,6 +19,7 @@ const createService = async (req, res) => {
       });
     }
 
+    // [isan] menambahkan data service dengan memanggil modelnya (sesuaikan modelnya disini : createNewService)
     const created = await serviceModel.createNewService(serviceData);
 
     res.status(201).json({
@@ -34,7 +35,7 @@ const createService = async (req, res) => {
   }
 };
 
-// 2. Ambil semua daftar service (Read All)
+// Ambil semua daftar service (Read All)
 const viewAllServices = async (req, res) => {
   try {
     const rowData = await serviceModel.viewAllServices();
@@ -52,7 +53,7 @@ const viewAllServices = async (req, res) => {
   }
 };
 
-// 3. Ambil satu data service berdasarkan ID (Read Single)
+// Ambil satu data service berdasarkan ID (Read Single)
 const viewSingleService = async (req, res) => {
   try {
     const { id } = req.params;
@@ -78,7 +79,7 @@ const viewSingleService = async (req, res) => {
   }
 };
 
-// 4. Edit/Update data service atau status (Update)
+// Edit/Update data service atau status (Update)
 const editService = async (req, res) => {
   try {
     const { id } = req.params;
@@ -106,7 +107,7 @@ const editService = async (req, res) => {
   }
 };
 
-// 5. Hapus data service (Delete)
+// Hapus data service (Delete)
 const deleteService = async (req, res) => {
   try {
     const { id } = req.params;

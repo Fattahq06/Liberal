@@ -11,19 +11,18 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
-// Buat tabel kendaraan & tabel services sekaligus
+// Tabel services (untuk POS Service HP)
 db.serialize(() => {
-  // Tabel services (untuk POS Service HP)
   db.run(`
     CREATE TABLE IF NOT EXISTS services (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nama_customer TEXT NOT NULL,
-      seri_handphone TEXT NOT NULL,
+      namaCustomer TEXT NOT NULL,
+      seriHandphone TEXT NOT NULL,
       kerusakan TEXT NOT NULL,
       status TEXT NOT NULL,
       biaya INTEGER NOT NULL,
       tanggal TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
 });

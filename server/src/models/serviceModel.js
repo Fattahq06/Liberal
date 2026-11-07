@@ -9,7 +9,7 @@ const createNewService = (body) => {
   return new Promise((resolve, reject) => {
     try {
       const query = `
-        INSERT INTO services (nama_customer, seri_handphone, kerusakan, status, biaya, tanggal)
+        INSERT INTO services (namaCustomer, seriHandphone, kerusakan, status, biaya, tanggal)
         VALUES (?, ?, ?, ?, ?, ?)
       `;
 
@@ -31,10 +31,15 @@ const createNewService = (body) => {
           return reject(err);
         }
 
+        // [isan] this.lastID = id auto-increment yang baru dibuat
         resolve({
+          // sebutkan aja satu persatu sesuai dengan data yang di database
           id: this.lastID,
-          ...body,
+          namaCustomer: body.namaCustomer,
+          seriHandphone: body.seriHandphone,
+          kerusakan: body.kerusakan,
           status: statusDefault,
+          biaya: Number(body.biaya),
           tanggal: tanggalHariIni,
         });
       });
@@ -89,8 +94,8 @@ const editService = (id, body) => {
   return new Promise((resolve, reject) => {
     const query = `
       UPDATE services
-      SET nama_customer = ?,
-          seri_handphone = ?,
+      SET namaCustomer = ?,
+          seriHandphone = ?,
           kerusakan = ?,
           status = ?,
           biaya = ?
