@@ -78,12 +78,13 @@ db.serialize(() => {
       email TEXT NOT NULL,
       alamat TEXT NOT NULL,
       kodeDokter TEXT NOT NULL UNIQUE,
-      jenisDokter TEXT NOT NULL,
+      jenisDokterId INTEGER NOT NULL,
       spesialisasi TEXT,
       subspesialisasi TEXT,
       specialClinicalInterest TEXT,
       specializedServiceLine TEXT,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (jenisDokterId) REFERENCES jenisDokter(id)
     )
   `);
 });
