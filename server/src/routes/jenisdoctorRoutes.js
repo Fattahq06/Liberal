@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const jenisDokterController = require("../controllers/jenisDoctorController");
+const jenisDokterController = require("../controllers/jenisdoctorController");
 
 // [POST] Tambah data jenis dokter baru
 router.post("/", jenisDokterController.createJenisDokter);
