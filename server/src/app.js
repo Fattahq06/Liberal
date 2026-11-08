@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const serviceRoutes = require("./routes/serviceRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
+const patientRoutes = require("./routes/patientRoutes");
 
 const app = express();
 
@@ -20,7 +21,11 @@ app.use("/api", serviceRoutes);
 // [isan] Daftar Route Untuk Service
 app.use("/api/services", serviceRoutes);
 
+// Daftar Route Untuk Service
 app.use("/api/doctors", doctorRoutes);
+
+// [isan] Daftar Route Untuk Pasien
+app.use("./api/patients", patientRoutes);
 
 // [isan] ini handler untuk error 404 yang dicontohkan pak dosen
 app.use((req, res) => {

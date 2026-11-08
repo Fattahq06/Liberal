@@ -25,6 +25,24 @@ db.serialize(() => {
     )
   `);
 
+  // [isan] Tabel data pasien
+  db.run(`
+    CREATE TABLE IF NOT EXISTS patients (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nama TEXT NOT NULL,
+      jenisKelamin TEXT NOT NULL,
+      tempatLahir TEXT NOT NULL,
+      tanggalLahir TEXT NOT NULL,
+      nomorHandphone TEXT NOT NULL,
+      email TEXT NOT NULL,
+      alamat TEXT NOT NULL,
+      kodePasien TEXT NOT NULL UNIQUE,
+      jenisPasien TEXT CHECK(jenisPasien IN ('Umum', 'BPJS')) NOT NULL DEFAULT 'Umum',
+      nikPasien TEXT NOT NULL UNIQUE,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // [isan] Nama tabel dan kolom diubah jadi jenisDokter
   db.run(
     `
