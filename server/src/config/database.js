@@ -105,6 +105,23 @@ db.serialize(() => {
       FOREIGN KEY (jenisDokterId) REFERENCES jenisDokter(id)
     )
   `);
+
+  // [isan] ini tabel data jadwal temu / appointment
+  db.run(`
+    CREATE TABLE IF NOT EXISTS jadwalTemu (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      doctorId INTEGER NOT NULL,
+      patientId INTEGER NOT NULL,
+      tanggalTemu TEXT NOT NULL,
+      jamTemu TEXT NOT NULL,
+      keluhan TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      catatanDokter TEXT,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (doctorId) REFERENCES doctors(id) ON DELETE CASCADE,
+      FOREIGN KEY (patientId) REFERENCES patients(id) ON DELETE CASCADE
+    )
+  `);
 });
 
 module.exports = db;

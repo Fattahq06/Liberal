@@ -1,4 +1,5 @@
-const jenisDokterModel = require("../models/jenisDokterModel");
+// const jenisDokterModel = require("../models/jenisDoctorModel");
+const jenisDokterModel = require("../models/jenisDoctorModel");
 
 // Tambah data jenis dokter baru (Create)
 const createJenisDokter = async (req, res) => {

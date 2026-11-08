@@ -1,56 +1,24 @@
-import { useState, useEffect } from "react";
-import ServiceForm from "./components/serviceForm";
-import ServiceTable, { type ServiceItem } from "./components/ServiceTable";
+import React from "react";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import PatientContainer from "./components/PatientContainer";
 
-function App() {
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // Fungsi untuk mengambil data dari backend
-  const fetchServices = () => {
-    setLoading(true);
-    fetch("http://localhost:3000/api/services/all")
-      .then((res) => res.json())
-      .then((data) => {
-        const dataArray = Array.isArray(data) ? data : data.data || [];
-        setServices(dataArray);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Gagal koneksi ke server:", err);
-        setServices([]);
-        setLoading(false);
-      });
-  };
-
-  // Ambil data saat halaman pertama kali dimuat
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
+export default function App() {
   return (
-    <div
-      style={{
-        padding: "20px",
-        fontFamily: "Arial",
-        maxWidth: "900px",
-        margin: "0 auto",
-      }}
-    >
-      <h1>Sistem Manajemen Servis HP (POS)</h1>
-      <p style={{ color: "#666" }}>
-        Dr. Gadget - Kelola data servis handphone customer dengan mudah.
-      </p>
-      <hr style={{ marginBottom: "20px" }} />
+    <div className="flex min-h-screen bg-[#F8F9FA]">
+      {/* 1. Side Menu */}
+      <Sidebar />
 
-      {/* Komponen Form Input di atas */}
-      <ServiceForm onSuccess={fetchServices} />
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* 2. Top Menu / Header */}
+        <Header pageTitle="Pasien" breadcrumb="Pengobatan > Pasien" />
 
-      <h2 style={{ marginTop: "30px" }}>Daftar Servis Masuk</h2>
-      {/* Komponen Tabel Data di bawah */}
-      <ServiceTable services={services} loading={loading} />
+        {/* 3. Container Utama */}
+        <main className="flex-1 overflow-y-auto">
+          <PatientContainer />
+        </main>
+      </div>
     </div>
   );
 }
-
-export default App;
