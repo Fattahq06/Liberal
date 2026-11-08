@@ -28,19 +28,19 @@ const patientController = {
   },
 
   // [POST] Tambah data pasien baru
-  createPatient: (req, res) => {
-    PatientModel.create(req.body, function (err) {
+  createPatient: function (req, res) {
+    PatientModel.create(req.body, function (err, lastId) {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        console.error("GAGAL MENYIMPAN PASIEN:", err.message); // <-- Biar errornya nongol di terminal!
+        return res.status(500).json({ success: false, error: err.message });
       }
       res.status(201).json({
         success: true,
         message: "Data pasien berhasil ditambahkan!",
-        id: this.lastID,
+        id: lastId,
       });
     });
   },
-
   // [PUT] Edit data pasien
   editPatient: (req, res) => {
     const { id } = req.params;
