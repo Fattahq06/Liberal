@@ -25,18 +25,18 @@ db.serialize(() => {
     )
   `);
 
-  // [isan] ini data jenis dokter
+  // [isan] Nama tabel dan kolom diubah jadi jenisDokter
   db.run(
     `
-    CREATE TABLE IF NOT EXISTS jenis_dokter (
+    CREATE TABLE IF NOT EXISTS jenisDokter (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      jenis_dokter TEXT NOT NULL,
+      jenisDokter TEXT NOT NULL,
       status TEXT CHECK(status IN ('aktif', 'non aktif')) NOT NULL DEFAULT 'aktif'
     )
   `,
     () => {
       // Masukkan data default (seed) jika tabel baru dibuat / kosong
-      db.get("SELECT COUNT(*) AS count FROM jenis_dokter", (err, row) => {
+      db.get("SELECT COUNT(*) AS count FROM jenisDokter", (err, row) => {
         if (!err && row.count === 0) {
           const defaultData = [
             ["Dokter Umum", "aktif"],
@@ -54,13 +54,13 @@ db.serialize(() => {
           ];
 
           const stmt = db.prepare(
-            "INSERT INTO jenis_dokter (jenis_dokter, status) VALUES (?, ?)",
+            "INSERT INTO jenisDokter (jenisDokter, status) VALUES (?, ?)",
           );
           defaultData.forEach((item) => {
             stmt.run(item[0], item[1]);
           });
           stmt.finalize();
-          console.log("✅ Data default jenis_dokter berhasil dimasukkan.");
+          console.log("✅ Data default jenisDokter berhasil dimasukkan.");
         }
       });
     },
