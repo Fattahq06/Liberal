@@ -6,13 +6,13 @@ const doctorController = require("../controllers/doctorController");
 router.post("/", doctorController.createDoctor);
 
 // [GET] Ambil semua daftar dokter
-router.get("/all", doctorController.getAllDoctors);
+router.get("/all", doctorController.viewAllDoctors);
 
 // [GET] Ambil satu data dokter berdasarkan ID
-router.get("/single/:id", doctorController.getDoctorById);
+router.get("/single/:id", doctorController.viewSingleDoctor);
 
 // [PUT] Edit / update data dokter
-router.put("/edit/:id", doctorController.updateDoctor);
+router.put("/edit/:id", doctorController.editDoctor);
 
 // [DELETE] Hapus data dokter
 router.delete("/delete/:id", doctorController.deleteDoctor);
