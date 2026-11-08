@@ -1,4 +1,3 @@
-
 const db = require("../config/database");
 
 /**
@@ -19,7 +18,7 @@ const createDoctor = (body) => {
           email,
           alamat,
           kodeDokter,
-          jenisDokter,
+          jenisDokterId,
           spesialisasi,
           subspesialisasi,
           specialClinicalInterest,
@@ -37,7 +36,7 @@ const createDoctor = (body) => {
         body.email,
         body.alamat,
         body.kodeDokter,
-        body.jenisDokter,
+        body.jenisDokterId, // Diubah dari jenisDokter ke jenisDokterId
         body.spesialisasi || null,
         body.subspesialisasi || null,
         body.specialClinicalInterest || null,
@@ -50,22 +49,23 @@ const createDoctor = (body) => {
           return reject(err);
         }
 
-        resolve({
-          id: this.lastID,
-          nama: body.nama,
-          jenisKelamin: body.jenisKelamin,
-          tempatLahir: body.tempatLahir,
-          tanggalLahir: body.tanggalLahir,
-          nomorHandphone: body.nomorHandphone,
-          email: body.email,
-          alamat: body.alamat,
-          kodeDokter: body.kodeDokter,
-          jenisDokter: body.jenisDokter,
-          spesialisasi: body.spesialisasi || null,
-          subspesialisasi: body.subspesialisasi || null,
-          specialClinicalInterest: body.specialClinicalInterest || null,
-          specializedServiceLine: body.specializedServiceLine || null,
-        });
+        // Ambil data yang baru di-insert beserta join jenis dokternya agar konsisten
+        db.get(
+          `
+          SELECT 
+            doctors.*, 
+            jenisDokter.jenisDokter AS namaJenisDokter,
+            jenisDokter.status AS statusJenisDokter
+          FROM doctors
+          JOIN jenisDokter ON doctors.jenisDokterId = jenisDokter.id
+          WHERE doctors.id = ?
+        `,
+          [this.lastID],
+          (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
+          },
+        );
       });
     } catch (error) {
       console.error("Something's not right!", error);
@@ -74,11 +74,18 @@ const createDoctor = (body) => {
   });
 };
 
-// Ambil semua data dokter
+// Ambil semua data dokter (Menggunakan JOIN agar data jenis dokter ikut tampil)
 const viewAllDoctors = () => {
   return new Promise((resolve, reject) => {
     try {
-      const query = `SELECT * FROM doctors`;
+      const query = `
+        SELECT 
+          doctors.*, 
+          jenisDokter.jenisDokter AS namaJenisDokter,
+          jenisDokter.status AS statusJenisDokter
+        FROM doctors
+        JOIN jenisDokter ON doctors.jenisDokterId = jenisDokter.id
+      `;
 
       db.all(query, [], (err, rows) => {
         if (err) {
@@ -95,11 +102,19 @@ const viewAllDoctors = () => {
   });
 };
 
-// Ambil satu data dokter berdasarkan ID
+// Ambil satu data dokter berdasarkan ID (Menggunakan JOIN)
 const viewSingleDoctor = (id) => {
   return new Promise((resolve, reject) => {
     try {
-      const query = `SELECT * FROM doctors WHERE id = ?`;
+      const query = `
+        SELECT 
+          doctors.*, 
+          jenisDokter.jenisDokter AS namaJenisDokter,
+          jenisDokter.status AS statusJenisDokter
+        FROM doctors
+        JOIN jenisDokter ON doctors.jenisDokterId = jenisDokter.id
+        WHERE doctors.id = ?
+      `;
 
       db.get(query, [id], (err, row) => {
         if (err) {
@@ -129,7 +144,7 @@ const editDoctor = (id, body) => {
           email = ?,
           alamat = ?,
           kodeDokter = ?,
-          jenisDokter = ?,
+          jenisDokterId = ?,
           spesialisasi = ?,
           subspesialisasi = ?,
           specialClinicalInterest = ?,
@@ -146,7 +161,7 @@ const editDoctor = (id, body) => {
       body.email,
       body.alamat,
       body.kodeDokter,
-      body.jenisDokter,
+      body.jenisDokterId, // Diubah dari jenisDokter ke jenisDokterId
       body.spesialisasi || null,
       body.subspesialisasi || null,
       body.specialClinicalInterest || null,
@@ -164,14 +179,26 @@ const editDoctor = (id, body) => {
         return resolve(null);
       }
 
-      // Ambil data dokter yang sudah di-update
-      db.get(`SELECT * FROM doctors WHERE id = ?`, [id], (err, row) => {
-        if (err) {
-          return reject(err);
-        }
+      // Ambil data dokter yang sudah di-update beserta JOIN jenis dokternya
+      db.get(
+        `
+        SELECT 
+          doctors.*, 
+          jenisDokter.jenisDokter AS namaJenisDokter,
+          jenisDokter.status AS statusJenisDokter
+        FROM doctors
+        JOIN jenisDokter ON doctors.jenisDokterId = jenisDokter.id
+        WHERE doctors.id = ?
+      `,
+        [id],
+        (err, row) => {
+          if (err) {
+            return reject(err);
+          }
 
-        resolve(row);
-      });
+          resolve(row);
+        },
+      );
     });
   });
 };

@@ -1,4 +1,3 @@
-
 const doctorModel = require("../models/doctorModel");
 
 // Tambah data dokter baru (Create)
@@ -6,7 +5,7 @@ const createDoctor = async (req, res) => {
   try {
     const doctorData = req.body;
 
-    // Validasi data dokter yang wajib diisi
+    // Validasi data dokter yang wajib diisi (jenisDokter diubah menjadi jenisDokterId)
     if (
       !doctorData.nama ||
       !doctorData.jenisKelamin ||
@@ -16,12 +15,12 @@ const createDoctor = async (req, res) => {
       !doctorData.email ||
       !doctorData.alamat ||
       !doctorData.kodeDokter ||
-      !doctorData.jenisDokter
+      !doctorData.jenisDokterId
     ) {
       return res.status(400).json({
         message: "Bad Request",
         serverMessage:
-          "nama, jenisKelamin, tempatLahir, tanggalLahir, nomorHandphone, email, alamat, kodeDokter, jenisDokter wajib diisi",
+          "nama, jenisKelamin, tempatLahir, tanggalLahir, nomorHandphone, email, alamat, kodeDokter, jenisDokterId wajib diisi",
       });
     }
 
