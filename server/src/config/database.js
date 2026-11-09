@@ -72,11 +72,6 @@ db.serialize(() => {
         if (!err && row.count === 0) {
           const defaultData = [
             ["Dokter Umum", "aktif"],
-            ["Dokter Gigi", "aktif"],
-            ["Dokter Spesialis Anak", "aktif"],
-            ["Dokter Spesialis Penyakit Dalam", "aktif"],
-            ["Dokter Spesialis Mata", "aktif"],
-            ["Dokter Spesialis THT-KL", "aktif"],
           ];
 
           const stmt = db.prepare(
