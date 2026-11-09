@@ -75,14 +75,8 @@ db.serialize(() => {
             ["Dokter Gigi", "aktif"],
             ["Dokter Spesialis Anak", "aktif"],
             ["Dokter Spesialis Penyakit Dalam", "aktif"],
-            ["Dokter Spesialis Kandungan (Sp.OG)", "aktif"],
-            ["Dokter Spesialis Kulit & Kelamin", "aktif"],
             ["Dokter Spesialis Mata", "aktif"],
             ["Dokter Spesialis THT-KL", "aktif"],
-            ["Dokter Spesialis Saraf", "aktif"],
-            ["Dokter Spesialis Bedah", "aktif"],
-            ["Dokter Spesialis Jiwa (Psikiater)", "aktif"],
-            ["Dokter Estetika / Kecantikan", "aktif"],
           ];
 
           const stmt = db.prepare(
