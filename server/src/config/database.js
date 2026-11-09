@@ -72,6 +72,7 @@ db.serialize(() => {
         if (!err && row.count === 0) {
           const defaultData = [
             ["Dokter Umum", "aktif"],
+            ["Dokter Gigi", "aktif"],
           ];
 
           const stmt = db.prepare(
