@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Plus,
   Users,
   UserPlus,
   Calendar,
   Layers,
+  DoorOpen,
   LayoutDashboard,
   type LucideIcon,
 } from "lucide-react";
@@ -30,11 +31,16 @@ const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
   },
   {
     title: "Master Data",
-    items: [{ to: "/jenis-dokter", label: "Jenis Dokter", icon: Layers }],
+    items: [
+      { to: "/jenis-dokter", label: "Jenis Dokter", icon: Layers },
+      { to: "/ruangan", label: "Ruangan", icon: DoorOpen },
+    ],
   },
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
       {/* Logo Brand */}
@@ -49,7 +55,11 @@ export default function Sidebar() {
 
       {/* Main Action Button */}
       <div className="p-4">
-        <button className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 transition-all">
+        <button
+          type="button"
+          onClick={() => navigate("/jadwal-temu/tambah")}
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-pink-500/20 transition-all"
+        >
           <Plus size={18} />
           Pasien Datang
         </button>

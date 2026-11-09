@@ -3,8 +3,14 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import PatientContainer from "./components/PatientContainer";
+import DoctorContainer from "./components/DoctorContainer";
 import JenisDokterContainer from "./components/JenisDokterContainer";
-import ComingSoon from "./components/ComingSoon";
+import RuanganContainer from "./components/RuanganContainer";
+import DashboardContainer from "./components/DashboardContainer";
+import JadwalTemuContainer from "./components/JadwalTemuContainer";
+import AddJadwalTemuContainer from "./components/AddJadwalTemuContainer";
+import DetailJadwalTemuContainer from "./components/DetailJadwalTemuContainer";
+import EditJadwalTemuContainer from "./components/EditJadwalTemuContainer";
 
 export default function App() {
   // Judul & breadcrumb header diatur oleh halaman yang sedang aktif
@@ -40,13 +46,7 @@ export default function App() {
 
             <Route
               path="/dashboard"
-              element={
-                <ComingSoon
-                  title="Dashboard"
-                  breadcrumb="Insight > Dashboard"
-                  onHeaderChange={handleHeaderChange}
-                />
-              }
+              element={<DashboardContainer onHeaderChange={handleHeaderChange} />}
             />
             <Route
               path="/pasien"
@@ -54,22 +54,28 @@ export default function App() {
             />
             <Route
               path="/dokter"
-              element={
-                <ComingSoon
-                  title="Dokter"
-                  breadcrumb="Pengobatan > Dokter"
-                  onHeaderChange={handleHeaderChange}
-                />
-              }
+              element={<DoctorContainer onHeaderChange={handleHeaderChange} />}
             />
             <Route
               path="/jadwal-temu"
+              element={<JadwalTemuContainer onHeaderChange={handleHeaderChange} />}
+            />
+            <Route
+              path="/jadwal-temu/tambah"
               element={
-                <ComingSoon
-                  title="Jadwal Temu"
-                  breadcrumb="Pengobatan > Jadwal Temu"
-                  onHeaderChange={handleHeaderChange}
-                />
+                <AddJadwalTemuContainer onHeaderChange={handleHeaderChange} />
+              }
+            />
+            <Route
+              path="/jadwal-temu/:id"
+              element={
+                <DetailJadwalTemuContainer onHeaderChange={handleHeaderChange} />
+              }
+            />
+            <Route
+              path="/jadwal-temu/:id/edit"
+              element={
+                <EditJadwalTemuContainer onHeaderChange={handleHeaderChange} />
               }
             />
             <Route
@@ -77,6 +83,11 @@ export default function App() {
               element={
                 <JenisDokterContainer onHeaderChange={handleHeaderChange} />
               }
+            />
+
+            <Route
+              path="/ruangan"
+              element={<RuanganContainer onHeaderChange={handleHeaderChange} />}
             />
 
             {/* Alamat yang tidak dikenal -> kembali ke Pasien */}
