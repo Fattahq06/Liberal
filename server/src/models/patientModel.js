@@ -1,33 +1,34 @@
 const db = require("../config/database");
 
 const PatientModel = {
-  // Ambil semua data pasien
+  // Ambil semua data pasien (terbaru di atas)
   getAll: (callback) => {
-    const query = "SELECT * FROM patients ORDER BY id DESC";
-    db.all(query, [], callback);
+    db.all("SELECT * FROM patients ORDER BY id DESC", [], callback);
   },
 
   // Ambil satu data pasien berdasarkan ID
   getById: (id, callback) => {
-    const query = "SELECT * FROM patients WHERE id = ?";
-    db.get(query, [id], callback);
+    db.get("SELECT * FROM patients WHERE id = ?", [id], callback);
   },
 
-  // Tambah data pasien baru
+  // Tambah data pasien baru. Kode pasien (PT-0001, dst) dibuat otomatis
+  // dari nomor kode terbesar yang ada, jadi tidak bentrok walau ada data dihapus.
   create: (data, callback) => {
-    const queryGetLast = "SELECT id FROM patients ORDER BY id DESC LIMIT 1";
+    const queryMax = `
+      SELECT COALESCE(MAX(CAST(SUBSTR(kodePasien, 4) AS INTEGER)), 0) AS maxNo
+      FROM patients
+    `;
 
-    db.get(queryGetLast, [], (err, row) => {
+    db.get(queryMax, [], (err, row) => {
       if (err) return callback(err);
 
-      const nextId = row ? row.id + 1 : 1;
-      const generatedCode = `PT-${String(nextId).padStart(4, "0")}`;
+      const generatedCode = `PT-${String((row ? row.maxNo : 0) + 1).padStart(4, "0")}`;
 
       const queryInsert = `
         INSERT INTO patients (
-          nama, jenisKelamin, tempatLahir, tanggalLahir, nomorHandphone, 
-          email, alamat, kodePasien, jenisPasien, nikPasien
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          nama, jenisKelamin, tempatLahir, tanggalLahir, nomorHandphone,
+          email, alamat, kodePasien, jenisPasien, nikPasien, faskes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const params = [
@@ -41,22 +42,23 @@ const PatientModel = {
         generatedCode,
         data.jenisPasien,
         data.nikPasien,
+        data.faskes,
       ];
 
-      db.run(queryInsert, params, function (err) {
-        // Kirim error (jika ada) dan ID terakhir menggunakan 'this.lastID'
-        callback(err, this.lastID);
+      db.run(queryInsert, params, function (insertErr) {
+        if (insertErr) return callback(insertErr);
+        callback(null, { id: this.lastID, kodePasien: generatedCode });
       });
     });
   },
 
-  // Edit / update data pasien
+  // Edit / update data pasien (kode pasien tidak bisa diubah)
   update: (id, data, callback) => {
     const query = `
       UPDATE patients SET
-        nama = ?, jenisKelamin = ?, tempatLahir = ?, tanggalLahir = ?, 
-        nomorHandphone = ?, email = ?, alamat = ?, 
-        jenisPasien = ?, nikPasien = ?
+        nama = ?, jenisKelamin = ?, tempatLahir = ?, tanggalLahir = ?,
+        nomorHandphone = ?, email = ?, alamat = ?,
+        jenisPasien = ?, nikPasien = ?, faskes = ?
       WHERE id = ?
     `;
     const params = [
@@ -69,15 +71,23 @@ const PatientModel = {
       data.alamat,
       data.jenisPasien,
       data.nikPasien,
+      data.faskes,
       id,
     ];
-    db.run(query, params, callback);
+    db.run(query, params, function (err) {
+      // this.changes = jumlah baris yang cocok (0 berarti ID tidak ada)
+      callback(err, this ? this.changes : 0);
+    });
   },
 
-  // Hapus data pasien
+  // Hapus data pasien beserta jadwal temu miliknya (sesuai ON DELETE CASCADE)
   delete: (id, callback) => {
-    const query = "DELETE FROM patients WHERE id = ?";
-    db.run(query, [id], callback);
+    db.run("DELETE FROM jadwalTemu WHERE patientId = ?", [id], (err) => {
+      if (err) return callback(err);
+      db.run("DELETE FROM patients WHERE id = ?", [id], function (delErr) {
+        callback(delErr, this ? this.changes : 0);
+      });
+    });
   },
 };
 

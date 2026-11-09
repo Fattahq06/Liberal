@@ -39,9 +39,23 @@ db.serialize(() => {
       kodePasien TEXT NOT NULL UNIQUE,
       jenisPasien TEXT CHECK(jenisPasien IN ('Umum', 'BPJS')) NOT NULL DEFAULT 'Umum',
       nikPasien TEXT NOT NULL UNIQUE,
+      faskes TEXT,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // [pasien] Migrasi: tambah kolom faskes (khusus pasien BPJS) bila belum ada
+  db.all("PRAGMA table_info(patients)", (err, cols) => {
+    if (!err && Array.isArray(cols) && !cols.some((c) => c.name === "faskes")) {
+      db.run("ALTER TABLE patients ADD COLUMN faskes TEXT", (alterErr) => {
+        if (alterErr) {
+          console.error("❌ Gagal menambah kolom faskes:", alterErr.message);
+        } else {
+          console.log("✅ Kolom faskes ditambahkan ke tabel patients.");
+        }
+      });
+    }
+  });
 
   // [isan] Nama tabel dan kolom diubah jadi jenisDokter
   db.run(

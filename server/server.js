@@ -4,6 +4,7 @@ const cors = require("cors");
 // Import rute service kamu (sesuaikan nama file rutenya jika berbeda, misal: serviceRoutes)
 const serviceRoutes = require("./src/routes/serviceRoutes");
 const patientsRoutes = require("./src/routes/patientRoutes");
+const jenisDokterRoutes = require("./src/routes/jenisdoctorRoutes");
 
 const app = express();
 const PORT = 3000; // Bisa juga pakai process.env.PORT || 5000 sesuai kenyamananmu
@@ -23,6 +24,9 @@ app.use("/api/services", serviceRoutes);
 
 // Pendaftaran Routes Patients
 app.use("/api/patients", patientsRoutes);
+
+// Pendaftaran Routes Jenis Dokter
+app.use("/api/jenis-dokter", jenisDokterRoutes);
 
 // 404 Handler (Opsional tapi bagus buat jaga-jaga kalau salah ketik URL)
 app.use((req, res) => {
