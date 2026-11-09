@@ -1,5 +1,38 @@
-import React from "react";
-import { Plus, Users, UserPlus, Calendar, Layers } from "lucide-react"; // Pastikan install lucide-react untuk icon
+import { NavLink } from "react-router-dom";
+import {
+  Plus,
+  Users,
+  UserPlus,
+  Calendar,
+  Layers,
+  LayoutDashboard,
+  type LucideIcon,
+} from "lucide-react";
+
+interface MenuItem {
+  to: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
+  {
+    title: "Insight",
+    items: [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }],
+  },
+  {
+    title: "Pengobatan",
+    items: [
+      { to: "/pasien", label: "Pasien", icon: Users },
+      { to: "/dokter", label: "Dokter", icon: UserPlus },
+      { to: "/jadwal-temu", label: "Jadwal Temu", icon: Calendar },
+    ],
+  },
+  {
+    title: "Master Data",
+    items: [{ to: "/jenis-dokter", label: "Jenis Dokter", icon: Layers }],
+  },
+];
 
 export default function Sidebar() {
   return (
@@ -24,51 +57,31 @@ export default function Sidebar() {
 
       {/* Navigation Menu */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-6">
-        {/* Section: Pengobatan */}
-        <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">
-            Pengobatan
-          </p>
-          <nav className="space-y-1">
-            <a
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium bg-pink-50 text-pink-600"
-            >
-              <Users size={18} />
-              Pasien
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              <UserPlus size={18} />
-              Dokter
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              <Calendar size={18} />
-              Jadwal Temu
-            </a>
-          </nav>
-        </div>
-
-        {/* Section: Master Data */}
-        <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">
-            Master Data
-          </p>
-          <nav className="space-y-1">
-            <a
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              <Layers size={18} />
-              Jenis Dokter
-            </a>
-          </nav>
-        </div>
+        {MENU_SECTIONS.map((section) => (
+          <div key={section.title}>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">
+              {section.title}
+            </p>
+            <nav className="space-y-1">
+              {section.items.map(({ to, label, icon: Icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-pink-50 text-pink-600"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`
+                  }
+                >
+                  <Icon size={18} />
+                  {label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        ))}
       </div>
     </aside>
   );

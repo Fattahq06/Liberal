@@ -1,4 +1,3 @@
-import React from "react";
 import { LayoutGrid, Bell } from "lucide-react";
 
 interface HeaderProps {
